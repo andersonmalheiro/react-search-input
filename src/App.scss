@@ -1,0 +1,43 @@
+.container {
+  position: relative;
+  width: 400px;
+  
+  & input {
+    margin: 10px 0;
+    width: 100%;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    background: #FFF;
+    border-radius: 6px;
+    
+    &:placeholder {
+      color: rgba(0, 0, 0, 0.2);
+    }
+  }
+  
+  & .results {
+    position: absolute;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    background: #FFF;
+    border-radius: 6px;
+    width: inherit;
+    color: #6F738C;
+    
+    ul {
+      padding: 0;
+      margin: 0;
+    }
+    
+    li {
+      cursor: pointer;
+      list-style: none;
+      padding: 10px;
+      border-radius: 6px;
+      
+      &:hover {
+        background: #f0f1f4;
+      }
+    }
+  }
+}
