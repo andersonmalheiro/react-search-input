@@ -9,7 +9,7 @@ function App() {
         label="Search character"
         inputKey="character"
         optionLabel="name"
-        optionValue="name"
+
       />
     </div>
   );

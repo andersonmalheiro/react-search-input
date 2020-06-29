@@ -1,5 +1,5 @@
-import React, { ChangeEvent } from 'react';
-import { debounce } from '../../utils';
+import React, { ChangeEvent, useEffect } from 'react';
+import { useDebounce } from '../../utils';
 import { http } from '../../http';
 import styles from './styles.module.scss';
 
@@ -15,9 +15,9 @@ const SearchSelect: React.FC<SearchSelectProps> = (props) => {
 
   const inputRef = React.useRef<HTMLInputElement>(null);
 
-  const containerRef = React.useRef<HTMLDivElement>(null);
-
   const [searchValue, setSearchValue] = React.useState<string>('');
+
+  const debouncedSearch = useDebounce(searchValue, 1000);
 
   const [selected, setSelected] = React.useState<any>();
 
@@ -52,14 +52,11 @@ const SearchSelect: React.FC<SearchSelectProps> = (props) => {
   const handleSearch = (event: ChangeEvent) => {
     event.preventDefault();
     setShowResults(true);
-    const input = event.target as HTMLInputElement;
 
+    const input = event.target as HTMLInputElement;
     if (input) {
       const value = input.value;
       setSearchValue(value);
-      setSearching(true);
-      const debounced = debounce(doSearch, 1000);
-      debounced(value);
     }
   };
 
@@ -72,10 +69,9 @@ const SearchSelect: React.FC<SearchSelectProps> = (props) => {
       } else {
         setSelected(result);
       }
+    } else {
+      setSelected(result);
     }
-    setTimeout(() => {
-      console.log('selected value ->', selected);
-    }, 3000);
     setShowResults(false);
     setSearchResults([]);
   };
@@ -87,18 +83,20 @@ const SearchSelect: React.FC<SearchSelectProps> = (props) => {
     }
   };
 
-  const handleBlur = () => {
-    setShowResults(false);
-  };
+  useEffect(() => {
+    doSearch(debouncedSearch);
+  }, [debouncedSearch]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (initial) {
       doSearch('');
     }
   }, [initial]);
 
+  useEffect(() => console.log(selected), [selected]);
+
   return (
-    <div className={styles.container} ref={containerRef}>
+    <div className={styles.container}>
       {label && <label htmlFor={inputKey}>{label}</label>}
       <input
         name={inputKey}
